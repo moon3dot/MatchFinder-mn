@@ -1,6 +1,29 @@
+using api.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<ITokenService, TokenService>();
+
+#region Authentication & Authorization
+string tokenValue = builder.Configuration["TokenKey"]!;
+
+if (!string.IsNullOrEmpty(tokenValue))
+{
+    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenValue)),
+                ValidateIssuer = false,
+                ValidateAudience = false
+            };
+        });
+}
+#endregion Authentication & Authorization
+
 #region Cors: baraye ta'eede Angular HttpClient requests
 builder.Services.AddCors(options =>
     {
@@ -8,25 +31,6 @@ builder.Services.AddCors(options =>
             policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200"));
     });
 #endregion Cors
-
-#region Authentication & Authorization
-string? tokenValue = config[AppVariablesExtensions.TokenKey];
-
-if (tokenValue is not null)
-{
-	services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-		.AddJwtBearer(options =>
-		{
-			options.TokenValidationParameters = new TokenValidationParameters
-			{
-				ValidateIssuerSigningKey = true,
-				IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenValue)),
-				ValidateIssuer = false,
-				ValidateAudience = false
-			};
-		});
-}
-#endregion Authentication & Authorization
 
 #region MongoDbSettings
 ///// get values from this file: appsettings.Development.json /////
@@ -52,6 +56,8 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 
 app.UseCors();
+
+app.UseAuthentication(); // this line has to be between Cors and Authorization!
 
 app.UseAuthorization();
 

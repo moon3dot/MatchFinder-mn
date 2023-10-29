@@ -1,3 +1,8 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+
 namespace api.Services;
 public class TokenService : ITokenService
 {
@@ -7,7 +12,7 @@ public class TokenService : ITokenService
 
     public TokenService(IConfiguration config)
     {
-        string? tokenValue = config[AppVariablesExtensions.TokenKey];
+        string? tokenValue = config["TokenKey"];
 
         // throw exception if tokenValue is null
         _ = tokenValue ?? throw new ArgumentNullException("tokenValue cannot be null", nameof(tokenValue));
