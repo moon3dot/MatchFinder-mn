@@ -28,7 +28,7 @@ public class AccountController : BaseApiController
      public async Task<ActionResult<LoggedInDto>> Registe(RegisterDto userInput, CancellationToken cancellationToken)
      {
           // Check sync password and confirm password
-          if (userInput.Password == userInput.ConfirmPassword)
+          if (userInput.Password != userInput.ConfirmPassword)
                return BadRequest("Password is`n mach");
 
           // 

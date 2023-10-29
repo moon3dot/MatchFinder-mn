@@ -1,3 +1,4 @@
+using api.Repositories;
 using api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -50,6 +51,13 @@ builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
     return new MongoClient(uri.ConnectionString);
 });
 #endregion MongoDbSettings
+
+#region Dependency Injections
+builder.Services.AddScoped<ITokenService, TokenService>();
+
+builder.Services.AddScoped<IAccountRepository, AccountRepository>(); // Controller LifeCycle
+
+#endregion Dependency Injections
 
 var app = builder.Build();
 
