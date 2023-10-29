@@ -28,9 +28,9 @@ public record LoginDto(
 );
 
 public record LoggedInDto(
-     // Id make Api
+     // Id make mongoDB
      string Id,
-     // Email user in mongoDB
+     // User email in mongoDB
      string Email,
      // Token make Api
      string Token
