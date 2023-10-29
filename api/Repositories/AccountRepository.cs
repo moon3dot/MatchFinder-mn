@@ -25,7 +25,7 @@ public class AccountRepository : IAccountRepository
     /// <returns>
     /// loggedInDto for send angular
     /// </returns>
-    public async Task<LoggedInDto?> creatAsync(RegisterDto userInput, CancellationToken cancellationToken)
+    public async Task<LoggedInDto?> CreatAsync(RegisterDto userInput, CancellationToken cancellationToken)
     {
         // Check the account exist
         bool doesAccountExist = await _collection.Find<AppUser>(user =>
