@@ -9,6 +9,25 @@ builder.Services.AddCors(options =>
     });
 #endregion Cors
 
+#region Authentication & Authorization
+string? tokenValue = config[AppVariablesExtensions.TokenKey];
+
+if (tokenValue is not null)
+{
+	services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+		.AddJwtBearer(options =>
+		{
+			options.TokenValidationParameters = new TokenValidationParameters
+			{
+				ValidateIssuerSigningKey = true,
+				IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenValue)),
+				ValidateIssuer = false,
+				ValidateAudience = false
+			};
+		});
+}
+#endregion Authentication & Authorization
+
 #region MongoDbSettings
 ///// get values from this file: appsettings.Development.json /////
 // get section
@@ -27,7 +46,6 @@ builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
     return new MongoClient(uri.ConnectionString);
 });
 #endregion MongoDbSettings
-
 
 var app = builder.Build();
 

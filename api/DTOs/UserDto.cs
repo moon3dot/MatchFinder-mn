@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace api.Controllers;
+namespace api.DTOs;
 
-public class AccountConteroller
+public class UserDto
 {
     
 }
